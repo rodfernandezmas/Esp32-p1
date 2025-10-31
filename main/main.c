@@ -300,6 +300,7 @@ void gps_display_task_nmea(void *arg) {
                 }
 
                 
+                
 
                 line_pos = 0;
             } 
