@@ -23,6 +23,10 @@
 #define GPS_BAUD_RATE    9600
 #define GPS_BUF_SIZE     1024
 
+// Pin del LED
+#define LED_GPIO GPIO_NUM_2
+
+
 static ssd1306_handle_t display;
 
 // estructura para posiciones GPS
@@ -244,6 +248,15 @@ void gps_display_task_nmea(void *arg) {
                     // Agarra el numero de sats.
                     sats = get_satellites_in_use_from_gpgga(line);
 
+                    // Si son más de 3 sats, prende el led
+                    if (sats > 3) {
+                        // Prende el LED que está en el pin GPIO_2
+                        gpio_set_level(LED_GPIO, 1);  // 1 = ON, 0 = OFF
+                    } else {
+                        // Apaga LED o realiza alguna acción
+                        gpio_set_level(LED_GPIO, 0);
+                    }
+
                     // Agarra el timestamp en texto.
                     char *timestamp_string = get_timestamp_from_gpgga(line);
 
@@ -354,6 +367,17 @@ void app_main(void) {
         },
     };
     ESP_ERROR_CHECK(ssd1306_new_i2c(&cfg, &display));
+
+    // Configurar GPIO para el LED
+
+    gpio_config_t io_conf = {
+        .pin_bit_mask = (1ULL << LED_GPIO),
+        .mode = GPIO_MODE_OUTPUT,
+        .pull_up_en = GPIO_PULLUP_DISABLE,
+        .pull_down_en = GPIO_PULLDOWN_DISABLE,
+        .intr_type = GPIO_INTR_DISABLE
+    };
+    gpio_config(&io_conf);
 
     // Crear tarea para el display
     //xTaskCreate(display_task, "display_task", 2048, NULL, 10, NULL);
