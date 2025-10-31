@@ -60,6 +60,7 @@ int get_satellite_count_from_gpgsv(const char *nmea) {
     return -1;
 }
 
+// Función para parsear sentencias gpgga y sacar número de satélites en uso
 int get_satellites_in_use_from_gpgga(const char *nmea) {
     if (strncmp(nmea, "$GPGGA", 6) != 0) return -1;
 
