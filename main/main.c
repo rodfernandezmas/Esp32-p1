@@ -40,6 +40,7 @@ gps_position_t average_position = {0.0, 0.0};
 gps_position_t positions[MAX_POSITIONS];
 int position_count = 0;
 
+// Funciones para parsear sentencias gpgsv y sacar número de satélites
 int get_satellite_count_from_gpgsv(const char *nmea) {
     if (strncmp(nmea, "$GPGSV", 6) != 0) return -1;
 
